@@ -9,36 +9,18 @@ import Control.Monad
 import qualified Control.Category as C
 import Data.Maybe
 
+testProp :: (S.Set Int -> Bool) -> [Int] -> Bool
+testProp prop xs = xs .$ L.nub
+                      .$ (flip S.insertAll) S.empty
+                      .$ prop
+
 propCheckP0, propCheckP1, propCheckP2, propCheckP3, propCheckP4, propCheckP5 :: [Int] -> Bool
-propCheckP0 xs = I.checkProp I.prop0 set
-  where
-          set = S.insertAll xs' S.empty
-          !xs' = L.nub xs
-
-propCheckP1 xs = I.checkProp I.prop1 set
-  where
-          set = S.insertAll xs' S.empty
-          !xs' = L.nub xs
-
-propCheckP2 xs = I.checkProp I.prop2 set
-  where
-          set = S.insertAll xs' S.empty
-          !xs' = L.nub xs
-          
-propCheckP3 xs = I.checkProp I.prop3 set
-  where
-          set = S.insertAll xs' S.empty
-          !xs' = L.nub xs
-          
-propCheckP4 xs = I.checkProp I.prop4 set
-  where
-          set = S.insertAll xs' S.empty
-          !xs' = L.nub xs
-          
-propCheckP5 xs = I.checkProp I.prop5 set
-  where
-          set = S.insertAll xs' S.empty
-          !xs' = L.nub xs
+propCheckP0 = testProp I.prop0
+propCheckP1 = testProp I.prop1
+propCheckP2 = testProp I.prop2
+propCheckP3 = testProp I.prop3
+propCheckP4 = testProp I.prop4
+propCheckP5 = testProp I.prop5
           
 propInsertMember :: [Int] -> Bool
 propInsertMember xs = L.all (\x -> S.member x set) xs'

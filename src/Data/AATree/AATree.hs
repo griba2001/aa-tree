@@ -171,10 +171,6 @@ prop5 (Node _ lv l r)
         | otherwise = prop5 l && prop5 r
 prop5 Nil = True
 
-checkProp :: (Tree a -> Bool) -> Tree a -> Bool
-checkProp prop Nil = True
-checkProp prop t @ (Node _ _ l r) = prop t && checkProp prop l && checkProp prop r
-
 
 
 
