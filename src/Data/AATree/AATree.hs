@@ -5,7 +5,7 @@ module Data.AATree.AATree (
   insert, delete, member,
   toList,
   minimum, maximum,        
-  checkProp, prop0, prop1, prop2, prop3, prop4, prop5,        
+  prop0, prop1, prop2, prop3, prop4, prop5,
 ) where
 
 import Prelude hiding (null, minimum, maximum)
@@ -134,8 +134,8 @@ toList = toDList >>> D.toList
 -- left and right trees also comply
 prop0 :: Ord a => Tree a -> Bool
 prop0 Nil = True
-prop0 (Node x _ l r) = L.all (\y -> y < x) (toList l) &&
-                       L.all (\y -> x < y) (toList r) &&
+prop0 (Node x _ l r) = L.all (< x) (toList l) && 
+                       L.all (> x) (toList r) && 
                        prop0 l && prop0 r
 
 -- AA trees properties
