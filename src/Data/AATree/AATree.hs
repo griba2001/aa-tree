@@ -146,17 +146,19 @@ prop1 (Node _ lv Nil Nil) = lv == 1
 prop1 (Node _ _ l r) = prop1 l && prop1 r 
 prop1 Nil = True
 
--- if there is a left child, the level of the parent is one greater than the child's one
+-- if there is a left child, the level of the parent is one greater than the left child's one
 prop2 (Node _ lvParent l @ (Node _ lvLChild _ _) r) = lvParent == 1 + lvLChild 
                                                       && prop2 l && prop2 r
 prop2 (Node _ _ l r) = prop2 l && prop2 r
 prop2 Nil = True
 
+-- if there is a right child, the level of the parent is 0 or 1 more than the level of the right child
 prop3 (Node _ lvParent l r @ (Node _ lvRChild _ _)) = lvParent - lvRChild <= 1 
                                                       && prop3 l && prop3 r
 prop3 (Node _ _ l r) = prop3 l && prop3 r
 prop3 Nil = True
 
+-- if there is a right right grandchild, its level is strictly less than that of the actual node
 prop4 (Node _ lvParent l r @ (Node _ lvRChild _ (Node _ lvRGChild _ _))) = lvRGChild < lvParent
                                                                            && prop4 l && prop4 r
 prop4 (Node _ _ l r) = prop4 l && prop4 r
