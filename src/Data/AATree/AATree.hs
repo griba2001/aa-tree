@@ -129,8 +129,8 @@ toList = toDList >>> D.toList
 -----------------------------------------------------------------
 
 -- prop BST
--- all node keys from left tree are less than the actual one.
--- all node keys from right tree are greter than ...
+-- all node keys from the left tree are less than the actual one.
+-- all node keys from the right tree are greater than ...
 -- left and right trees also comply
 prop0 :: Ord a => Tree a -> Bool
 prop0 Nil = True
