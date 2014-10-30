@@ -14,7 +14,7 @@ import qualified "dlist" Data.DList as D
 import qualified Data.List as L
 
 
-data Tree a = Nil | Node {value :: a, level :: Int, left :: Tree a, right :: Tree a} deriving (Show)
+data Tree a = Nil | Node {value :: a, level :: Int, left, right :: Tree a} deriving (Show)
 
 getLevel :: Tree a -> Int
 getLevel Nil = 0
@@ -129,6 +129,9 @@ toList = toDList >>> D.toList
 -----------------------------------------------------------------
 
 -- prop BST
+-- all node keys from left tree are less than actual one.
+-- all node keys from right tree are greter than
+-- left and right trees also comply
 prop0 :: Ord a => Tree a -> Bool
 prop0 Nil = True
 prop0 (Node x _ l r) = L.all (\y -> y < x) (toList l) &&
@@ -136,23 +139,30 @@ prop0 (Node x _ l r) = L.all (\y -> y < x) (toList l) &&
                        prop0 l && prop0 r
 
 prop1, prop2, prop3, prop4, prop5 :: Tree a -> Bool
+
+-- leaf nodes have level 1
 prop1 (Node _ lv Nil Nil) = lv == 1
--- prop1 (Node _ 1 l r) 
-prop1 _ = True
+prop1 (Node _ _ l r) = prop1 l && prop1 r 
+prop1 Nil = True
 
-prop2 (Node _ lvParent (Node _ lvLChild _ _) _) = lvParent == 1 + lvLChild
-prop2 _ = True
+-- if there is a left child, the level of parent is one greater than the child one
+prop2 (Node _ lvParent l @ (Node _ lvLChild _ _) r) = lvParent == 1 + lvLChild && prop2 l && prop2 r
+prop2 (Node _ _ l r) = prop2 l && prop2 r
+prop2 Nil = True
 
-prop3 (Node _ lvParent _ (Node _ lvRChild _ _)) = lvParent - lvRChild <= 1
-prop3 _ = True
+prop3 (Node _ lvParent l r @ (Node _ lvRChild _ _)) = lvParent - lvRChild <= 1 && prop3 l && prop3 r
+prop3 (Node _ _ l r) = prop3 l && prop3 r
+prop3 Nil = True
 
-prop4 (Node _ lvParent _ (Node _ lvRChild _ (Node _ lvRGChild _ _))) = lvRGChild < lvParent
-prop4 _ = True
+prop4 (Node _ lvParent l r @ (Node _ lvRChild _ (Node _ lvRGChild _ _))) = lvRGChild < lvParent && prop4 l && prop4 r
+prop4 (Node _ _ l r) = prop4 l && prop4 r
+prop4 Nil = True
 
+-- all nodes with level > 1 have two children
 prop5 (Node _ lv l r)
-        | lv > 1 = (not . null $ l) && (not . null $ r)
-        | otherwise = True
-prop5 _ = True
+        | lv > 1 = (not . null $ l) && (not . null $ r) && prop5 l && prop5 r
+        | otherwise = prop5 l && prop5 r
+prop5 Nil = True
 
 checkProp :: (Tree a -> Bool) -> Tree a -> Bool
 checkProp prop Nil = True
