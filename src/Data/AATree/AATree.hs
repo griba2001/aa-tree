@@ -95,8 +95,6 @@ decreaseLevel t @ (Node _ lvP l r @ (Node _ lvR _ _))
                      in t {level = should_be, right = r'}
   | otherwise = t
         where should_be = 1 + min (getLevel l) (getLevel r)
-              
--- decreaseLevel t = t
         
 splitRight, skewRight, skewRightRight :: Tree a -> Tree a
 splitRight Nil = Nil  
