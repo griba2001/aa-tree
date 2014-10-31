@@ -77,10 +77,10 @@ maximum (Node x _ _ r) = maximum r
 maximum Nil = error "maximum: empty tree"
 -----------------------------------------------------------------
 
-rebalance :: Ord a => Tree a -> Tree a
+rebalance :: Tree a -> Tree a
 rebalance = decreaseLevel >>> skew >>> skewRight >>> skewRightRight >>> split >>> splitRight
 
-decreaseLevel :: Ord a => Tree a -> Tree a
+decreaseLevel :: Tree a -> Tree a
 decreaseLevel Nil = Nil
 
 decreaseLevel t @ (Node _ lvP l Nil)
