@@ -4,7 +4,7 @@ module Data.AATree.AATree (
   empty, singleton, null,
   insert, delete, member,
   toList,
-  minimum, maximum,        
+  findMin, findMax,
   prop0, prop1, prop2, prop3, prop4, prop5,
 ) where
 
@@ -75,6 +75,16 @@ minimum Nil = error "minimum: empty tree"
 maximum (Node x _ _ Nil) = x
 maximum (Node x _ _ r) = maximum r
 maximum Nil = error "maximum: empty tree"
+
+
+findMin :: Tree a -> Maybe a
+findMin Nil = Nothing
+findMin t = Just $ minimum t
+
+findMax :: Tree a -> Maybe a
+findMax Nil = Nothing
+findMax t = Just $ maximum t
+
 -----------------------------------------------------------------
 
 rebalance :: Tree a -> Tree a

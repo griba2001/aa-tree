@@ -1,4 +1,4 @@
-{-# LANGUAGE PackageImports, RecordWildCards, NamedFieldPuns #-}
+{-# LANGUAGE PackageImports, NamedFieldPuns #-}
 module TestDetailed (tests) where
 
 import qualified Test.QuickCheck as Q
@@ -9,7 +9,7 @@ import TestSortedSet
 toTSResult :: Q.Result -> TS.Result
 toTSResult Q.Success {} = TS.Pass
 toTSResult Q.GaveUp {} = TS.Fail "GaveUp"
-toTSResult Q.Failure {reason} = TS.Fail reason
+toTSResult Q.Failure {Q.reason} = TS.Fail reason
 
 runQuickCheck :: Q.Testable p => p -> IO TS.Progress
 runQuickCheck prop = do

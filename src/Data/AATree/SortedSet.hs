@@ -8,15 +8,16 @@ module Data.AATree.SortedSet (
   delete, deleteAll,
   member, notMember,
   toList, fromList,
-  minimum, maximum,        
+  findMin, findMax,
 ) where
 
 import Prelude hiding (null, empty, minimum, maximum)
--- import Data.Monoid (Monoid, mempty, mappend, (<>), mconcat)
+import qualified Data.List as L
+import Data.Monoid (Monoid, mempty, mappend)
 import Data.Foldable (Foldable(..))
 import qualified Data.Foldable as F
 
-import Data.AATree.AATree
+import Data.AATree.AATree as AA
 
 type Set a = Tree a
 
@@ -33,3 +34,13 @@ fromList xs = F.foldl' (flip insert) empty xs
 notMember :: Ord k => k -> Set k -> Bool
 notMember k = not . member k
 
+unionL, unionR, union :: Ord k => Set k -> Set k -> Set k
+unionR tx ty = L.foldl' (flip insert) tx (toList ty) -- on collision it keeps last inserted
+unionL tx ty = L.foldl' (flip insert) ty (toList tx) -- on collision it keeps last inserted
+union = unionL
+
+instance (Ord a) => Monoid (Set a) where  -- requires extensions TypeSynonymInstances, FlexibleInstances
+  mempty = empty
+  mappend = union
+
+  

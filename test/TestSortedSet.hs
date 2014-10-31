@@ -66,11 +66,11 @@ propMaximum :: [Int] -> Bool
 propMaximum [] = True
 propMaximum xs = maxOfSet == maximum xs
   where
-    maxOfSet = S.maximum $ S.fromList xs
+    Just maxOfSet = S.findMax $ S.fromList xs
 
 propMinimum :: [Int] -> Bool
 propMinimum [] = True
 propMinimum xs = minOfSet == minimum xs
   where
-    minOfSet = S.minimum $ S.fromList xs
+    Just minOfSet = S.findMin $ S.fromList xs
 -------------------------------------------------------
