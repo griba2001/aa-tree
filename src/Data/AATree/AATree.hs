@@ -52,16 +52,16 @@ split t = t
   
 insert, delete :: Ord a => a -> Tree a -> Tree a
 insert x Nil = singleton x
-insert x (Node y lv l r)
-   | x < y = Node y lv (insert x l) r .$ skew .$ split
-   | x > y = Node y lv l (insert x r) .$ skew .$ split
-   | x == y = Node x lv l r
+insert x (Node y lv l r) = case compare x y of
+   LT -> Node y lv (insert x l) r .$ skew .$ split
+   GT -> Node y lv l (insert x r) .$ skew .$ split
+   EQ -> Node x lv l r
 
 delete x Nil = Nil
-delete x t @ (Node y lv l r)
-   | x < y = Node y lv (delete x l) r .$ rebalance
-   | x > y = Node y lv l (delete x r) .$ rebalance
-   | x == y = case (l, r) of
+delete x t @ (Node y lv l r) = case compare x y of
+   LT -> Node y lv (delete x l) r .$ rebalance
+   GT -> Node y lv l (delete x r) .$ rebalance
+   EQ -> case (l, r) of
                    (Nil, Nil) -> Nil -- deleted
                    (Nil, _) -> Node successor lv l (delete successor r) .$ rebalance -- copy successor value and delete successor
                         where successor = minimum r
@@ -120,10 +120,10 @@ skewRightRight t = t
 
 member :: Ord a => a -> Tree a -> Bool
 member x Nil = False
-member x (Node y _ l r)
-        | x == y = True
-        | x < y = member x l
-        | otherwise = member x r
+member x (Node y _ l r) = case compare x y of
+        EQ -> True
+        LT -> member x l
+        GT -> member x r
 
 
 toDList :: Tree a -> D.DList a

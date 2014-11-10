@@ -13,7 +13,7 @@ toTSResult Q.Failure {Q.reason} = TS.Fail reason
 
 runQuickCheck :: Q.Testable p => p -> IO TS.Progress
 runQuickCheck prop = do
-        qres <- Q.quickCheckWithResult Q.stdArgs {Q.maxSuccess = 30, Q.maxSize = 20} prop
+        qres <- Q.quickCheckWithResult Q.stdArgs {Q.maxSuccess = 50, Q.maxSize = 20} prop
         return $ (Finished . toTSResult) qres
 
 tests :: IO [Test]
